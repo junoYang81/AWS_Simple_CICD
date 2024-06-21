@@ -32,8 +32,8 @@ jobs:
       - name: jar파일로 EC2 전송
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.EC2.HOST }}
-          username: ${{ secrets.EC2.USERNAME }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: ${{ secrets.EC2_PORT}}
           source: ./app.jar

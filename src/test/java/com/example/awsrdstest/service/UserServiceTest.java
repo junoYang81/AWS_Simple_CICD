@@ -17,7 +17,9 @@ class UserServiceTest {
     @Test
     void 테스트(){
         UserCreateDTO userDto = new UserCreateDTO(1111, "aaa", "손흥민");
+
         userService.createUser(userDto);
+
         assertThat(userDto.getId()).isGreaterThan(0);
     }
 

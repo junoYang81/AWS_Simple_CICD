@@ -20,7 +20,7 @@ class UserServiceTest {
     void 테스트(){
         UserCreateDTO userDto = new UserCreateDTO("1111", "aaa");
         userService.createUser(userDto);
-        assertThat(user.g)
+        assertThat(userDto.getId()).isGreaterThan(0);
     }
 
 }

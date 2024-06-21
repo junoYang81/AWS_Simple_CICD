@@ -19,11 +19,11 @@ jobs:
           echo "mult-3"
 
       - name: Github 변수 사용
-          run: |
-            echo $GITHUB_SHA
-            echo $GITHUB_REPOSITORY
+        run: |
+          echo $GITHUB_SHA
+          echo $GITHUB_REPOSITORY
 
       - name: Secret 변수 사용
-          run: |
-            echo ${{secrets.USERID}}
-            echo ${{secrets.PASSWORD}}
+        run: |
+          echo ${{secrets.USERID}}
+          echo ${{secrets.PASSWORD}}

@@ -3,15 +3,27 @@ name: Github Actions 실현하기
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   My-First-CICD-job:
     runs-on: ubuntu-latest
+
     steps:
       - name: simple-action-test
         run: echo "This is the 1 cloud step"
+
       - name: multiple-commands
         run: |
           echo "mult-2"
           echo "mult-3"
+
+      - name: Github 변수 사용
+          run: |
+            echo $GITHUB_SHA
+            echo $GITHUB_REPOSITORY
+
+      - name: Secret 변수 사용
+          run: |
+            echo ${{secrets.USERID}}
+            echo ${{secrets.PASSWORD}}

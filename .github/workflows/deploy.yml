@@ -29,8 +29,17 @@ jobs:
       - name: jar 파일명 변경
         run: mv ./build/libs/*.SNAPSHOP.jar ./app.jar
 
+      name: jar파일로 EC2 전송
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2.HOST }}
+        username: ${{ secrets.EC2.USERNAME }}
+        password: ${{ secrets.EC2_PRIVATE_KEY }}
+        source: ./app.jar
+        target: /home/ubuntu/project/tobe
 
-#      - name: EC2로 jar파일 전송하기
+
+          #      - name: EC2로 jar파일 전송하기
 #      - name: SSH로 EC2에 접속하기(프로세스 실행)
 
            

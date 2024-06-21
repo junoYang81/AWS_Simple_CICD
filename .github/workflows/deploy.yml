@@ -27,7 +27,7 @@ jobs:
           ./gradlew clean build
 
       - name: jar 파일명 변경
-        run: mv ./build/libs/*.SNAPSHOT.jar ./app.jar
+        run: mv ./build/libs/*-SNAPSHOT.jar ./app.jar
 
       - name: jar파일로 EC2 전송
         uses: appleboy/scp-action@v0.1.7

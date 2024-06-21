@@ -6,24 +6,27 @@ on:
       - master
 
 jobs:
-  My-First-CICD-job:
+  Manual-deployment:
     runs-on: ubuntu-latest
 
     steps:
-      - name: simple-action-test
-        run: echo "This is the 1 cloud step"
-
-      - name: multiple-commands
+      - name: application.yml test
         run: |
-          echo "mult-2"
-          echo "mult-3"
+          pwd
+          ls ./src/main/
+          echo ${{secrets.APPLICATION_YML}}> ./src/main/resources/application.yml
 
-      - name: Github 변수 사용
-        run: |
-          echo $GITHUB_SHA
-          echo $GITHUB_REPOSITORY
-
-      - name: Secret 변수 사용
-        run: |
-          echo ${{secrets.USERID}}
-          echo ${{secrets.PASSWORD}}
+#      - name: multiple-commands
+#        run: |
+#          echo "mult-2"
+#          echo "mult-3"
+#
+#      - name: Github 변수 사용
+#        run: |
+#          echo $GITHUB_SHA
+#          echo $GITHUB_REPOSITORY
+#
+#      - name: Secret 변수 사용
+#        run: |
+#          echo ${{secrets.USERID}}
+#          echo ${{secrets.PASSWORD}}

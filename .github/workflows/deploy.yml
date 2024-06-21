@@ -11,3 +11,7 @@ jobs:
     steps:
       - name: simple-action-test
         run: echo "This is the 1 cloud step"
+      - name: multiple-commands
+        run: |
+          echo "mult-2"
+          echo "mult-3"

@@ -1,0 +1,13 @@
+name: Github Actions 실현하기
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  My-First-CICD-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: simple-action-test
+        run: echo "This is the 1 cloud step"

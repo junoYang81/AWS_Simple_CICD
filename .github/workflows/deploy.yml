@@ -1,4 +1,4 @@
-name: Github Actions 실현하기
+name: 컨테이너 기반 배포하기
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  Manual-deployment:
+  Container-based-deployment-Job:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,20 +26,26 @@ jobs:
           chmod +x ./gradlew
           ./gradlew clean build
 
-      - name: jar 파일명 변경
-        run: mv ./build/libs/*-SNAPSHOT.jar ./app.jar
-
-      - name: jar파일로 EC2 전송
-        uses: appleboy/scp-action@v0.1.7
+      - name: AWS ECR 접근하기 위한 AWS credentials 설정
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          port: ${{ secrets.EC2_PORT}}
-          source: ./app.jar
-          target: /home/ubuntu/project/tobe
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
 
-      - name: SSH로 EC2에 접속하기(프로세스 실행)
+      - name: AWS PRIBVATE ECR 로그인
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Docker 이미지 생성하기
+        run: |
+          docker build -t web-server .
+          docker tag web-server ${{ steps.login-ecr.outputs.registry }}/web-server:latest
+
+      - name: Docker 이미지를 ecr에 push하기
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/web-server:latest
+
+      - name: SSH로 EC2에 접속하기(ECR로부터 이미지 pull한 다음 컨테이너 실행)
         uses: appleboy/ssh-action@v1.0.3
         with:
             host: ${{ secrets.EC2_HOST }}
@@ -48,27 +54,12 @@ jobs:
             port: ${{ secrets.EC2_PORT }}
             script_stop: true
             script: |
-              rm -rf /home/ubuntu/project/cur || true
-              mkdir /home/ubuntu/project/cur
-              mv /home/ubuntu/project/tobe/app.jar /home/ubuntu/project/cur/app.jar
-              cd /home/ubuntu/project/cur
-              sudo fuser -k -n tcp 8080 || true
-              sudo nohup java -jar app.jar > ./output.log 2>&1 &
-              rm -rf /home/ubuntu/project/tobe
+              docker stop web-server || true
+              docker rm web-server || true
+              docker pull ${{ steps.login-ecr.outputs.registry }}/web-server:latest
+              docker run -d --name web-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/web-server:latest
+
+    
 
            
 
-#      - name: multiple-commands
-#        run: |
-#          echo "mult-2"
-#          echo "mult-3"
-#
-#      - name: Github 변수 사용
-#        run: |
-#          echo $GITHUB_SHA
-#          echo $GITHUB_REPOSITORY
-#
-#      - name: Secret 변수 사용
-#        run: |
-#          echo ${{secrets.USERID}}
-#          echo ${{secrets.PASSWORD}}

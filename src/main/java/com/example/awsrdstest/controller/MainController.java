@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainController {
     @GetMapping("/main")
     public String sayHello() {
-        return "Hello!";
+        return "Hello aws!";
     }
 
 }

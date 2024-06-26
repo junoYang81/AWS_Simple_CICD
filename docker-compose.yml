@@ -1,6 +1,6 @@
 version: "1"
 services:
   web:
-    image: web-server2
+    image: web-server:v2
     ports:
       - 8080
